@@ -256,7 +256,10 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             
             tableView.reloadData()
             ShowNextIndexPathRow = indexPath.row - 1
+            
+            if UIDevice.current.userInterfaceIdiom == .pad{
             performSegue(withIdentifier: "showDetail", sender: self)
+            }
             
         }
     }
