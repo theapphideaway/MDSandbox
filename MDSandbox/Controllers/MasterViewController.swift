@@ -9,13 +9,20 @@
 import UIKit
 import CoreData
 
+
+var noteArray = [Note]()
+
 class MasterViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
     
-    var count: Int = 0
-    var noteArray = [Note]()
+    var myIndex: Int = 0
+    var isAddPressed: Bool = false
+    var isSelected: Bool = false
+    var ShowNextIndexPathRow: Int?
+    var object: Note?
+    
     static var sharedInstance = MasterViewController()
     
     
@@ -38,40 +45,83 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
         super.viewWillAppear(animated)
+        tableView.reloadData()
     }
     
     
     
-    @IBAction func alertAdd(_ sender: UIBarButtonItem) {
+//    @IBAction func alertAdd(_ sender: UIBarButtonItem) {
+//        
+//        var alertText = UITextField()
+//        
+//        let alert = UIAlertController(title: "Add Note", message: "", preferredStyle: .alert)
+//        
+//        let action = UIAlertAction(title: "Add", style: .default) { (action) in
+//            
+//            let newCategory = Note(context: self.context)
+//            newCategory.content = alertText.text!
+//            
+//            noteArray.append(newCategory)
+//            
+//            self.saveNote()
+//            
+//            
+//        }
+//        
+//        
+//        alert.addTextField{(alertTextField) in
+//            alertTextField.placeholder = "Add new category"
+//            alertText = alertTextField
+//            
+//        }
+//        
+//        alert.addAction(action)
+//        
+//        present(alert, animated: true, completion: nil)
+//    }
+    
+    
+    
+    
+    
+    @IBAction func pleaseAdd(_ sender: UIBarButtonItem) {
         
-        var alertText = UITextField()
+        isAddPressed = true
         
-        let alert = UIAlertController(title: "Add Note", message: "", preferredStyle: .alert)
+        let newNote = Note(context: self.context)
+        newNote.content = "AddedNew"
+    
+        noteArray.append(newNote)
+        saveNote()
         
-        let action = UIAlertAction(title: "Add", style: .default) { (action) in
-            
-            let newCategory = Note(context: self.context)
-            newCategory.content = alertText.text!
-            
-            self.noteArray.append(newCategory)
-            
-            self.saveNote()
-            
-            self.count += 1
-            
-        }
+        performSegue(withIdentifier: "showDetail", sender: self)
+    
+        print(newNote.index(ofAccessibilityElement: newNote))
         
-        
-        alert.addTextField{(alertTextField) in
-            alertTextField.placeholder = "Add new category"
-            alertText = alertTextField
-            
-        }
-        
-        alert.addAction(action)
-        
-        present(alert, animated: true, completion: nil)
     }
+    
+    
+    
+//    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+//        //performSegue(withIdentifier: "newNote", sender: self)
+//
+//        let newNote = Note(context: self.context)
+//        newNote.content = "AddedContent"
+//
+//        noteArray.append(newNote)
+//
+//        saveNote()
+//
+//        print("You added")
+//
+//    }
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -104,30 +154,58 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
 
 
-   
+    
     
 
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        var indexPath: IndexPath?
+        
         if segue.identifier == "showDetail" {
-          if let indexPath = tableView.indexPathForSelectedRow {
-                let object = noteArray[indexPath.row]
-                let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-                controller.detailItem = object
-                controller.index = indexPath
-                controller.masterViewController = MasterViewController.sharedInstance
-                controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
-                controller.navigationItem.leftItemsSupplementBackButton = true
+        
             
-                tableView.deselectRow(at: indexPath, animated: true)
+            indexPath = tableView.indexPathForSelectedRow
             
-                tableView.reloadData()
+            
+            if isAddPressed{
+                indexPath = [0, noteArray.count - 1]
+                print("Added index path: " + String(indexPath!.row))
+            } else if ShowNextIndexPathRow != nil{
+                indexPath = [0, ShowNextIndexPathRow!]
             }
+            
+            if !isAddPressed && ShowNextIndexPathRow == nil {// SELECTED AN ITEM
+                object = noteArray[indexPath!.row]
+            } else if isAddPressed { // ADDING AN ITEM
+                object = noteArray[indexPath!.row]
+            } else if isAddPressed && indexPath!.row >= 0{
+                object = noteArray[indexPath!.row - 1]
+            }
+            else{//DELETING AN ITEM but this gert called when you are selecting the first time since idexPath.row is 0
+                self.object?.content = "Please select or add an Item"
+            }
+            let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
+            controller.detailItem = object
+            print(object?.content)
+            controller.index = indexPath
+            controller.isAdded = isAddPressed
+            controller.masterViewController = MasterViewController.sharedInstance
+            controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
+            controller.navigationItem.leftItemsSupplementBackButton = true
+            
+            //tableView.deselectRow(at: indexPath!, animated: true)
+            
+            tableView.reloadData()
+            
+            print(indexPath!.row)
             
         }
         
-        
+       isAddPressed = false
+       ShowNextIndexPathRow = nil
+        isSelected = false
         
     }
     
@@ -164,8 +242,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
-            context.delete(noteArray[indexPath.row])
-            
+            context.delete(noteArray[indexPath.row ])
+            noteArray.remove(at: indexPath.row)
                 
             do {
                 try context.save()
@@ -175,15 +253,20 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
+            
+            tableView.reloadData()
+            ShowNextIndexPathRow = indexPath.row - 1
+            performSegue(withIdentifier: "showDetail", sender: self)
+            
         }
     }
-    
     func reloadMasterData() {
         
         // Do whatever updates to your tableView's datasource
         tableView.reloadData()
     }
-
+    
+   
    
 
     // MARK: - Fetched results controller

@@ -13,7 +13,6 @@ class DetailViewController: UIViewController, UITextViewDelegate{
     @IBOutlet weak var detailDescriptionLabel: UILabel!
     @IBOutlet weak var noteTextFeild: UITextView!
     
-    var noteArray = [Note]()
     
     var masterViewController: MasterViewController?
     
@@ -24,10 +23,7 @@ class DetailViewController: UIViewController, UITextViewDelegate{
         // Update the user interface for the detail item.
         if let detail = detailItem {
             if let note = noteTextFeild {
-                note.text = detail.content!
-                
-                
-                print(index)
+                note.text = detail.content
                 
             }
         }
@@ -38,15 +34,25 @@ class DetailViewController: UIViewController, UITextViewDelegate{
 
         
         detailItem?.content = noteTextFeild.text
-        
+    
         saveNote()
         
         //let master = self.splitViewController?.viewControllers.first as? MasterViewController
+        
+        if UIDevice.current.userInterfaceIdiom == .pad{
     
         let masterController = splitViewController?.viewControllers[0] as? UINavigationController
         let tableController = masterController?.visibleViewController as? UITableViewController
         let tableView: UITableView? = tableController?.tableView
         tableView?.reloadData()
+            
+        } else{
+            masterViewController?.tableView.reloadData()
+        }
+        
+        
+        
+        
 //
         //master.reloadMasterData()
     }
@@ -86,9 +92,11 @@ class DetailViewController: UIViewController, UITextViewDelegate{
     }
     
     var index: IndexPath?
+    var isAdded: Bool?
     
     
     func saveNote(){
+        
         
         
         // Save the context.
@@ -98,8 +106,9 @@ class DetailViewController: UIViewController, UITextViewDelegate{
             let nserror = error as NSError
             fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
         }
-        
+        if index != nil && isAdded == true {
         masterViewController!.reloadMasterData()
+        }
     }
     
     func updateNote(){
