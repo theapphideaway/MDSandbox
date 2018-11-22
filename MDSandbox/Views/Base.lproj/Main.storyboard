@@ -54,11 +54,23 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Detail" id="mOI-FS-AaM">
-                        <barButtonItem key="rightBarButtonItem" title="Expand" id="qo6-HT-f3H">
+                        <barButtonItem key="leftBarButtonItem" title="Expand" id="qo6-HT-f3H">
                             <connections>
                                 <action selector="expandButtonPressed:" destination="JEX-9P-axG" id="IgZ-1G-e9Q"/>
                             </connections>
                         </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Bullets" id="ljo-eS-9cV">
+                                <connections>
+                                    <action selector="bulletButton:" destination="JEX-9P-axG" id="UeX-fX-j0U"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="List" id="Njh-m5-9Zc">
+                                <connections>
+                                    <action selector="listButton:" destination="JEX-9P-axG" id="uP2-1k-4CD"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="noteTextFeild" destination="i5j-4v-ook" id="iI6-S9-pJ8"/>
@@ -101,7 +113,7 @@
                                         <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Arm-wq-HPj">
                                             <rect key="frame" x="16" y="0.0" width="319" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                            <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="20"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </label>

@@ -6,15 +6,25 @@
 //  Copyright © 2018 ian schoenrock. All rights reserved.
 //
 
-import UIKit
 
-class DetailViewController: UIViewController, UITextViewDelegate{
+//Todo: Add scrolling functionality so the keyboard doesnt cover the the text
+
+import UIKit
+import AVFoundation
+
+class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerDelegate{
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
     @IBOutlet weak var noteTextFeild: UITextView!
     
     
     var masterViewController: MasterViewController?
+    var isBullet: Bool = false
+    var isList: Bool = false
+    var counter: Int = 1
+    var myChar: String?
+    var audioPlayer: AVAudioPlayer!
+    var selectSoundFileName: String?
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -32,6 +42,9 @@ class DetailViewController: UIViewController, UITextViewDelegate{
     
     func textViewDidChange(_ textView: UITextView) {
 
+        if !isList{
+            counter = 1
+        }
         
         detailItem?.content = noteTextFeild.text
     
@@ -50,14 +63,49 @@ class DetailViewController: UIViewController, UITextViewDelegate{
             masterViewController?.tableView.reloadData()
         }
         
+        if let newPosition = noteTextFeild.position(from: (noteTextFeild.selectedTextRange?.start)!, offset: -1){
+            let range = noteTextFeild.textRange(from: newPosition, to: (noteTextFeild.selectedTextRange?.start)!)
+            let character = noteTextFeild.text(in: range!)
+            myChar = character
+        }
         
+        if myChar == "\n"{
+            selectSoundFileName = "typewriterBell"
+            
+            
+            playSound()
+        } else if myChar != "\n"{
+            selectSoundFileName = "typeKey"
+            
+            playSound()
+        }
         
+        if(myChar! == "\n" && isBullet && !isList){
+            
+            noteTextFeild.insertText("\t• ")
+        }
         
-//
-        //master.reloadMasterData()
+        if(myChar! == "\n" && !isBullet && isList){
+            
+            noteTextFeild.insertText("\t\(counter). ")
+            counter += 1
+        }
+        
     }
-   
     
+    
+    @IBAction func listButton(_ sender: UIBarButtonItem) {
+        
+        isList = !isList
+        
+    }
+    
+    
+    @IBAction func bulletButton(_ sender: UIBarButtonItem) {
+        
+        isBullet = !isBullet
+
+    }
     
     
     @IBAction func expandButtonPressed(_ sender: Any) {
@@ -69,6 +117,9 @@ class DetailViewController: UIViewController, UITextViewDelegate{
                 splitViewController?.preferredDisplayMode = .primaryHidden
             }
         }
+        
+        
+        isBullet = !isBullet
 
     }
     
@@ -79,6 +130,11 @@ class DetailViewController: UIViewController, UITextViewDelegate{
         // Do any additional setup after loading the view, typically from a nib.
         
         noteTextFeild.delegate = self
+        
+        noteTextFeild.font = UIFont(name: "Courier", size: 25)
+        
+        noteTextFeild.scrollRangeToVisible(NSMakeRange(0, 0))
+        noteTextFeild.isScrollEnabled = true
         
         //print(fetchedResultsController.object(at: indexPath).content!)
         configureView()
@@ -111,8 +167,18 @@ class DetailViewController: UIViewController, UITextViewDelegate{
         }
     }
     
-    func updateNote(){
+    func playSound(){
         
+        let soundUrl = Bundle.main.url(forResource: selectSoundFileName, withExtension: "wav")
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundUrl!)
+        }
+        catch{
+            print(error)
+        }
+        
+        audioPlayer.play()
     }
 
 

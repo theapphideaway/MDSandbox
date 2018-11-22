@@ -44,6 +44,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
+        splitViewController!.preferredDisplayMode = .primaryHidden
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
@@ -188,7 +189,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             }
             let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
             controller.detailItem = object
-            print(object?.content)
             controller.index = indexPath
             controller.isAdded = isAddPressed
             controller.masterViewController = MasterViewController.sharedInstance
