@@ -44,7 +44,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     override func viewWillAppear(_ animated: Bool) {
         clearsSelectionOnViewWillAppear = splitViewController!.isCollapsed
-        splitViewController!.preferredDisplayMode = .primaryHidden
+        splitViewController!.preferredDisplayMode = .allVisible
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
