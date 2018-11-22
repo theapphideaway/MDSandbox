@@ -7,7 +7,6 @@
 //
 
 
-//Todo: Add scrolling functionality so the keyboard doesnt cover the the text
 //Todo: backspace fully with list enabled
 
 import UIKit
@@ -16,14 +15,16 @@ import AVFoundation
 class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerDelegate{
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
-    @IBOutlet weak var noteTextFeild: UITextView!
+    @IBOutlet weak var noteTextFeild: NoteTextView!
     
     
     var masterViewController: MasterViewController?
+    var model: DetailModel?
     var isBullet: Bool = false
     var isList: Bool = false
     var counter: Int = 1
-    var myChar: String?
+    var addedChar: String?
+    var deletedChar: String?
     var audioPlayer: AVAudioPlayer!
     var selectSoundFileName: String?
     
@@ -51,8 +52,8 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
     
         saveNote()
         
-        //let master = self.splitViewController?.viewControllers.first as? MasterViewController
         
+        //***********************************************************************************************
         if UIDevice.current.userInterfaceIdiom == .pad{
     
         let masterController = splitViewController?.viewControllers[0] as? UINavigationController
@@ -64,32 +65,60 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
             masterViewController?.tableView.reloadData()
         }
         
-        if let newPosition = noteTextFeild.position(from: (noteTextFeild.selectedTextRange?.start)!, offset: -1){
-            let range = noteTextFeild.textRange(from: newPosition, to: (noteTextFeild.selectedTextRange?.start)!)
+        //***********************************************************************************************
+        
+        
+        
+        
+        //***********************************************************************************************
+        
+        if let forwardPosition = noteTextFeild.position(from: (noteTextFeild.selectedTextRange?.start)!, offset: -1){
+            let range = noteTextFeild.textRange(from: forwardPosition, to: (noteTextFeild.selectedTextRange?.start)!)
             let character = noteTextFeild.text(in: range!)
-            myChar = character
+            addedChar = character
         }
         
-        if myChar == "\n"{
+        
+//        if let backwardPosition = noteTextFeild.position(from: (noteTextFeild.selectedTextRange?.start)!, offset:0){
+//            let range = noteTextFeild.textRange(from: backwardPosition, to: (noteTextFeild.selectedTextRange?.start)!)
+//            let character = noteTextFeild.text(in: range!)
+//            deletedChar = character
+//        }
+        
+        
+        
+        print(" Detail Deleted Char: \(GlobalDeletedChar)")
+        
+        
+        
+        if GlobalDeletedChar != "\t"
+        {
+        
+        if addedChar == "\n"{
             selectSoundFileName = "typewriterBell"
             
             
             playSound()
-        } else if myChar != "\n"{
+        } else if addedChar != "\n"{
             selectSoundFileName = "typeKey"
             
             playSound()
         }
         
-        if(myChar! == "\n" && isBullet && !isList){
+        if(addedChar! == "\n" && isBullet && !isList){
             
             noteTextFeild.insertText("\t• ")
         }
         
-        if(myChar! == "\n" && !isBullet && isList){
+        if(addedChar! == "\n" && !isBullet && isList){
             
             noteTextFeild.insertText("\t\(counter). ")
             counter += 1
+        }
+        
+        print("Added Char\(addedChar)")
+        
+        //***********************************************************************************************
         }
         
     }
@@ -187,4 +216,6 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
 
 
 }
+
+
 
