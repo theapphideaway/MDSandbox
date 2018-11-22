@@ -50,41 +50,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     }
     
     
-    
-//    @IBAction func alertAdd(_ sender: UIBarButtonItem) {
-//        
-//        var alertText = UITextField()
-//        
-//        let alert = UIAlertController(title: "Add Note", message: "", preferredStyle: .alert)
-//        
-//        let action = UIAlertAction(title: "Add", style: .default) { (action) in
-//            
-//            let newCategory = Note(context: self.context)
-//            newCategory.content = alertText.text!
-//            
-//            noteArray.append(newCategory)
-//            
-//            self.saveNote()
-//            
-//            
-//        }
-//        
-//        
-//        alert.addTextField{(alertTextField) in
-//            alertTextField.placeholder = "Add new category"
-//            alertText = alertTextField
-//            
-//        }
-//        
-//        alert.addAction(action)
-//        
-//        present(alert, animated: true, completion: nil)
-//    }
-    
-    
-    
-    
-    
     @IBAction func pleaseAdd(_ sender: UIBarButtonItem) {
         
         isAddPressed = true
@@ -103,32 +68,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     
     
-//    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
-//        //performSegue(withIdentifier: "newNote", sender: self)
-//
-//        let newNote = Note(context: self.context)
-//        newNote.content = "AddedContent"
-//
-//        noteArray.append(newNote)
-//
-//        saveNote()
-//
-//        print("You added")
-//
-//    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     func saveNote(){
-        
         
         // Save the context.
         do {
@@ -248,8 +188,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             do {
                 try context.save()
             } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                 let nserror = error as NSError
                 fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
@@ -264,19 +202,9 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         }
     }
     func reloadMasterData() {
-        
-        // Do whatever updates to your tableView's datasource
         tableView.reloadData()
     }
-    
    
-   
-
-    // MARK: - Fetched results controller
-
-
-    
-
 }
 
 extension UISplitViewController {
