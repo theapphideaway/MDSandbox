@@ -8,6 +8,7 @@
 
 
 //Todo: Add scrolling functionality so the keyboard doesnt cover the the text
+//Todo: backspace fully with list enabled
 
 import UIKit
 import AVFoundation
@@ -96,7 +97,10 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
     
     @IBAction func listButton(_ sender: UIBarButtonItem) {
         
-        isList = !isList
+        if !isBullet{
+            isList = !isList
+        }
+        
         
     }
     
