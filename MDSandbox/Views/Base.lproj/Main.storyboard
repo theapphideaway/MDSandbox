@@ -34,7 +34,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="i5j-4v-ook" customClass="NoteTextView" customModule="MDSandbox" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="102" width="375" height="565"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -42,13 +42,23 @@
                                     <outlet property="delegate" destination="JEX-9P-axG" id="1KP-6G-zXx"/>
                                 </connections>
                             </textView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Title" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9Ou-uN-UHE">
+                                <rect key="frame" x="0.0" y="64" width="375" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="i5j-4v-ook" firstAttribute="bottom" secondItem="VUw-jc-0yf" secondAttribute="bottom" id="8P4-zX-2rF"/>
-                            <constraint firstItem="i5j-4v-ook" firstAttribute="top" secondItem="VUw-jc-0yf" secondAttribute="top" id="Dv2-Oj-L7H"/>
-                            <constraint firstItem="i5j-4v-ook" firstAttribute="leading" secondItem="VUw-jc-0yf" secondAttribute="leading" id="kvt-we-EZx"/>
-                            <constraint firstItem="i5j-4v-ook" firstAttribute="trailing" secondItem="VUw-jc-0yf" secondAttribute="trailing" id="oTk-d9-The"/>
+                            <constraint firstItem="i5j-4v-ook" firstAttribute="trailing" secondItem="VUw-jc-0yf" secondAttribute="trailing" id="4RK-rb-97x"/>
+                            <constraint firstItem="i5j-4v-ook" firstAttribute="top" secondItem="9Ou-uN-UHE" secondAttribute="bottom" constant="8" id="4a7-oy-F4w"/>
+                            <constraint firstItem="9Ou-uN-UHE" firstAttribute="leading" secondItem="VUw-jc-0yf" secondAttribute="leading" id="Aiu-e9-XdC"/>
+                            <constraint firstItem="9Ou-uN-UHE" firstAttribute="trailing" secondItem="VUw-jc-0yf" secondAttribute="trailing" id="Na6-BS-QTd"/>
+                            <constraint firstItem="i5j-4v-ook" firstAttribute="bottom" secondItem="VUw-jc-0yf" secondAttribute="bottom" id="PVg-do-vLz"/>
+                            <constraint firstItem="i5j-4v-ook" firstAttribute="top" secondItem="9Ou-uN-UHE" secondAttribute="bottom" constant="8" id="Vy2-dF-OFf"/>
+                            <constraint firstItem="9Ou-uN-UHE" firstAttribute="top" secondItem="VUw-jc-0yf" secondAttribute="top" id="XAU-Pq-m3A"/>
+                            <constraint firstItem="i5j-4v-ook" firstAttribute="leading" secondItem="VUw-jc-0yf" secondAttribute="leading" id="wTj-Hn-3VR"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="VUw-jc-0yf"/>
                     </view>
@@ -74,11 +84,12 @@
                     </navigationItem>
                     <connections>
                         <outlet property="noteTextFeild" destination="i5j-4v-ook" id="iI6-S9-pJ8"/>
+                        <outlet property="noteTitleFeild" destination="9Ou-uN-UHE" id="8EA-fn-sO9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FJe-Yq-33r" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="791" y="-304"/>
+            <point key="canvasLocation" x="789.60000000000002" y="-304.4977511244378"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="Nki-YV-4Qg">

@@ -12,11 +12,11 @@
 import UIKit
 import AVFoundation
 
-class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerDelegate{
+class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerDelegate, UITextFieldDelegate{
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
     @IBOutlet weak var noteTextFeild: NoteTextView!
-    
+    @IBOutlet weak var noteTitleFeild: UITextField!
     
     var masterViewController: MasterViewController?
     var model: DetailModel?
@@ -36,7 +36,9 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
         if let detail = detailItem {
             if let note = noteTextFeild {
                 note.text = detail.content
-                
+            }
+            if let title = noteTitleFeild{
+                title.text = detail.title
             }
         }
     }
@@ -49,6 +51,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
         }
         
         detailItem?.content = noteTextFeild.text
+        detailItem?.title = noteTitleFeild.text
     
         saveNote()
         
@@ -67,9 +70,6 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
         
         //***********************************************************************************************
         
-        
-        
-        
         //***********************************************************************************************
         
         if let forwardPosition = noteTextFeild.position(from: (noteTextFeild.selectedTextRange?.start)!, offset: -1){
@@ -78,25 +78,11 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
             addedChar = character
         }
         
-        
-//        if let backwardPosition = noteTextFeild.position(from: (noteTextFeild.selectedTextRange?.start)!, offset:0){
-//            let range = noteTextFeild.textRange(from: backwardPosition, to: (noteTextFeild.selectedTextRange?.start)!)
-//            let character = noteTextFeild.text(in: range!)
-//            deletedChar = character
-//        }
-        
-        
-        
-        print(" Detail Deleted Char: \(GlobalDeletedChar)")
-        
-        
-        
         if GlobalDeletedChar != "\t"
         {
         
         if addedChar == "\n"{
             selectSoundFileName = "typewriterBell"
-            
             
             playSound()
         } else if addedChar != "\n"{
@@ -120,26 +106,18 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
         
         //***********************************************************************************************
         }
-        
     }
-    
     
     @IBAction func listButton(_ sender: UIBarButtonItem) {
         
         if !isBullet{
             isList = !isList
         }
-        
-        
     }
-    
     
     @IBAction func bulletButton(_ sender: UIBarButtonItem) {
-        
         isBullet = !isBullet
-
     }
-    
     
     @IBAction func expandButtonPressed(_ sender: Any) {
 
@@ -150,32 +128,27 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
                 splitViewController?.preferredDisplayMode = .primaryHidden
             }
         }
-        
-        
         isBullet = !isBullet
-
     }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         noteTextFeild.delegate = self
+        noteTitleFeild.delegate = self
         
         noteTextFeild.font = UIFont(name: "Courier", size: 25)
+        noteTitleFeild.font = UIFont(name: "Courier", size: 30)
         
         noteTextFeild.scrollRangeToVisible(NSMakeRange(0, 0))
         noteTextFeild.isScrollEnabled = true
         
-        //print(fetchedResultsController.object(at: indexPath).content!)
         configureView()
     }
 
     var detailItem: Note? {
         didSet {
-            // Update the view.
             configureView()
         }
     }
@@ -183,12 +156,7 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
     var index: IndexPath?
     var isAdded: Bool?
     
-    
     func saveNote(){
-        
-        
-        
-        // Save the context.
         do {
             try context.save()
         } catch {
@@ -201,20 +169,15 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
     }
     
     func playSound(){
-        
         let soundUrl = Bundle.main.url(forResource: selectSoundFileName, withExtension: "wav")
-        
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: soundUrl!)
         }
         catch{
             print(error)
         }
-        
         audioPlayer.play()
     }
-
-
 }
 
 

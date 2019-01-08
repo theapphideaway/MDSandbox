@@ -16,18 +16,16 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
 
     var detailViewController: DetailViewController? = nil
     var managedObjectContext: NSManagedObjectContext? = nil
-    
     var myIndex: Int = 0
     var isAddPressed: Bool = false
     var isSelected: Bool = false
     var ShowNextIndexPathRow: Int?
     var object: Note?
-    
     static var sharedInstance = MasterViewController()
-    
-    
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -37,9 +35,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             let controllers = split.viewControllers
             detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
-        
         loadNote()
-        
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -49,14 +45,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         tableView.reloadData()
     }
     
-    
     @IBAction func pleaseAdd(_ sender: UIBarButtonItem) {
         
         isAddPressed = true
         
         let newNote = Note(context: self.context)
-        newNote.content = "AddedNew"
-    
+        newNote.content = ""
+        newNote.title = ""
         noteArray.append(newNote)
         saveNote()
         
@@ -65,8 +60,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         print(newNote.index(ofAccessibilityElement: newNote))
         
     }
-    
-    
     
     func saveNote(){
         
@@ -81,8 +74,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         tableView.reloadData()
     }
     
-    
-    
     func loadNote(with request: NSFetchRequest<Note> = Note.fetchRequest()){
         
         do{
@@ -90,13 +81,8 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         } catch {
             print("Error")
         }
-        
         tableView.reloadData()
     }
-
-
-    
-    
 
     // MARK: - Segues
 
@@ -149,12 +135,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         
     }
     
-    
-
     // MARK: - Table View
-
-    
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return noteArray.count
     }
@@ -162,7 +143,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         
-        cell.textLabel?.text = noteArray[indexPath.row].content
+        cell.textLabel?.text = noteArray[indexPath.row].title
         
         return cell
     }
@@ -172,13 +153,6 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
         return true
     }
     
-    
-    
-    
-    
-    
-    
-
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             
