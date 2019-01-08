@@ -141,6 +141,8 @@ class DetailViewController: UIViewController, UITextViewDelegate, AVAudioPlayerD
         noteTextFeild.font = UIFont(name: "Courier", size: 25)
         noteTitleFeild.font = UIFont(name: "Courier", size: 30)
         
+        noteTitleFeild.autocapitalizationType = UITextAutocapitalizationType.words
+        
         noteTextFeild.scrollRangeToVisible(NSMakeRange(0, 0))
         noteTextFeild.isScrollEnabled = true
         
